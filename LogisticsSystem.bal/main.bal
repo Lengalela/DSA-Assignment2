@@ -3,7 +3,7 @@ import ballerinax/kafka;
 
 
 public function main() {
-    io:println("Welcome To Assignment 2 for DSA621S");
+    io:println("Welcome To Assignment 2 for DSA621S 2024");
 }
 
 type Shipment record {|
