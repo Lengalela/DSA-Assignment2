@@ -22,7 +22,7 @@ kafka:Producer kafkaProducer= check new(kafka:DEFAULT_URL,producerConfig);
 
 kafka:ConsumerConfiguration consumerConfiguration = {
     groupId: "group-id",
-    topics: ["kafka-topic-1"],
+    topics: ["standard-logistics-servces"],
     pollingInterval: 1,
     autoCommit: false
 };
