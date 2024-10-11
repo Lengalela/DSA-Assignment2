@@ -1,0 +1,14 @@
+# Use the official Ballerina Docker image
+FROM ballerina/ballerina:slp8
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the Ballerina source code to the container
+COPY producer.bal /app/producer.bal
+
+# Compile the Ballerina file
+RUN ballerina build producer.bal
+
+# Run the compiled Ballerina program
+CMD ["ballerina", "run", "producer.bal"]
