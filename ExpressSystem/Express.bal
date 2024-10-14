@@ -3,9 +3,9 @@ import ballerina/lang.value;
 import ballerina/log;
 
 // Configurable variables are now implicitly readonly as of Swan Lake Beta1
-configurable string groupId = "express-delivery-group";
-configurable string consumeTopic = "express-delivery";
-configurable string produceTopic = "delivery-confirmations";
+configurable string groupId = "Express_Delivery_group";
+configurable string consumeTopic = "Express_Delivery";
+configurable string produceTopic = "Delivery_Confirmations";
 
 // The main function is now marked as isolated for improved concurrency safety
 public isolated function main() returns error? {
