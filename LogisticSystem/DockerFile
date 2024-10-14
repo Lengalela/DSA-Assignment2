@@ -1,0 +1,7 @@
+FROM ballerina/ballerina:latest
+
+WORKDIR /app
+
+COPY Logistic.bal .
+
+CMD ["bal", "run", "Logistic.bal"]
