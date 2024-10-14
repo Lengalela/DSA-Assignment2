@@ -29,38 +29,38 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
 
   #Bal servicesss
-  LogisticsSys:
+  logisticssys:
     build:
-      context: ./LogisticsSystem
-      dockerfile: DockerFile
+      context: ./LogisticSystem
+      dockerfile: Dockerfile
     depends_on:
       - kafka
       - mongodb
 
-  StandardSys:
+  standardsys:
     build:
       context: ./StandardSystem
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     depends_on:
       - kafka
 
-  ExpressSys:
+  expresssys:
     build:
       context: ./ExpressSystem
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     depends_on:
       - kafka
 
-  InternationalSys:
+  internationalsys:
     build:
       context: ./InternationalSystem
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     depends_on:
       - kafka
 
-  Client:
+  client:
     build:
       context: ./Client
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     depends_on:
       - kafka
