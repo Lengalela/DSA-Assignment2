@@ -4,23 +4,23 @@ import ballerinax/kafka;
 import ballerinax/mongodb;
 
 // MongoDB client configuration
-mongodb:Client mongoClient = check new ({
+mongodb:Client Mongo = check new ({
     connection: {
         serverAddress: {
             host: "localhost",
             port: 27017
         },
         auth: <mongodb:ScramSha256AuthCredential>{
-            username: "tuyoleni",
-            password: "mango.tuyoleni",
-            database: "admin"
+            username: "lenga",
+            password: "password",
+            database: "Logistics"
         }
     }
 });
 
 public function main() returns error? {
     kafka:Consumer kafkaConsumer = check setupKafkaConsumer();
-    io:println("Logistics service started. Waiting for requests...");
+    io:println("Logistics service has started. Waiting for requests...");
 
     // Main event loop
     while (true) {
@@ -31,8 +31,8 @@ public function main() returns error? {
 // Setup Kafka consumer with specific configuration
 function setupKafkaConsumer() returns kafka:Consumer|error {
     kafka:ConsumerConfiguration consumerConfigs = {
-        groupId: "logistics-group",
-        topics: ["delivery-requests", "tracking-requests", "delivery-confirmations"],
+        groupId: "Logistics-group",
+        topics: ["Delivery_Requests", "tracking-requests", "Delivery_Confirmations"],
         pollingInterval: 1,
         autoCommit: false
     };
@@ -58,13 +58,13 @@ function processRecord(kafka:BytesConsumerRecord rec) returns error? {
     io:println("Processing record from topic: ", topic);
 
     match topic {
-        "delivery-requests" => {
+        "Delivery_Requests" => {
             check processDeliveryRequest(valueString);
         }
         "tracking-requests" => {
             check processTrackingRequest(valueString);
         }
-        "delivery-confirmations" => {
+        "Delivery_Confirmations" => {
             check processDeliveryConfirmation(valueString);
         }
         _ => {
@@ -80,9 +80,9 @@ function processDeliveryRequest(string requestStr) returns error? {
     // Simplified logging
     io:println("Processing Delivery Request: ", request.requestId);
 
-    mongodb:Database logistics = check mongoClient->getDatabase("logistics");
-    mongodb:Collection requests = check logistics->getCollection("requests");
-    _ = check requests->insertOne(<map<json>>request);
+    mongodb:Database Logistics = check Mongo->getDatabase("Logistics");
+    mongodb:Collection Requests = check Logistics->getCollection("Requests");
+    _ = check Requests->insertOne(<map<json>>request);
 
     check forwardToService(check request.shipmentType, request);
 }
@@ -94,9 +94,9 @@ function processTrackingRequest(string requestStr) returns error? {
 
     io:println("Processing Tracking Request: ", requestId);
 
-    mongodb:Database logistics = check mongoClient->getDatabase("logistics");
-    mongodb:Collection requests = check logistics->getCollection("requests");
-    record {|anydata...;|}? result = check requests->findOne({"requestId": requestId});
+    mongodb:Database Logistics = check Mongo->getDatabase("Logistics");
+    mongodb:Collection Requests = check Logistics->getCollection("Requests");
+    record {|anydata...;|}? result = check Requests->findOne({"requestId": requestId});
 
     if result is record {|anydata...;|} {
         io:println("Tracking information found for request ", requestId);
@@ -112,8 +112,8 @@ function processDeliveryConfirmation(string confirmationStr) returns error? {
 
     io:println("Processing Delivery Confirmation: ", requestId);
 
-    mongodb:Database logistics = check mongoClient->getDatabase("logistics");
-    mongodb:Collection requests = check logistics->getCollection("requests");
+    mongodb:Database Logistics = check Mongo->getDatabase("Logistics");
+    mongodb:Collection Requests = check Logistics->getCollection("Requests");
 
     mongodb:Update update = {
         "$set": {
@@ -122,7 +122,7 @@ function processDeliveryConfirmation(string confirmationStr) returns error? {
             "estimatedDeliveryTime": check confirmation.estimatedDeliveryTime
         }
     };
-    _ = check requests->updateOne({"requestId": requestId}, update);
+    _ = check Requests->updateOne({"requestId": requestId}, update);
 }
 
 // Forward request to appropriate service
@@ -146,21 +146,21 @@ function setupKafkaProducer() returns kafka:Producer|error {
 
 // Get all delivery requests from the database
 function getDeliveryRequests() returns stream<record {}, error?>|error {
-    mongodb:Database logisticsDb = check mongoClient->getDatabase("logistics");
-    mongodb:Collection requests = check logisticsDb->getCollection("requests");
-    return requests->find();
+    mongodb:Database Logistics = check Mongo->getDatabase("Logistics");
+    mongodb:Collection Requests = check Logistics->getCollection("Requests");
+    return Requests->find();
 }
 
 // Update delivery status in the database
 function updateDeliveryStatus(string requestId, string status) returns error? {
-    mongodb:Database logisticsDb = check mongoClient->getDatabase("logistics");
-    mongodb:Collection requests = check logisticsDb->getCollection("requests");
+    mongodb:Database Logistics = check Mongo->getDatabase("Logistics");
+    mongodb:Collection Requests = check Logistics->getCollection("Requests");
     mongodb:Update update = {
         "$set": {
             "status": status
         }
     };
-    _ = check requests->updateOne({"requestId": requestId}, update);
+    _ = check Requests->updateOne({"requestId": requestId}, update);
     io:println("Delivery status updated for request ", requestId, ": ", status);
 }
 // Custom error types for better error handling

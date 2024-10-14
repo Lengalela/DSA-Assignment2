@@ -17,4 +17,60 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper 
 
+  mongodb:
+    image: mongo:latest
+    ports:
+    - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: lenga
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  LogisticsSys:
+    build:
+      context: ./LogisticsSystem
+      dockerfile: DockerFile
+    depends_on:
+      - kafka
+      - mongodb
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - KAFKA_URL=kafka:29092
+
+  StandardSys:
+    build:
+      context: ./StandardSystem
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_URL=kafka:29092
+
+  ExpressSys:
+    build:
+      context: ./ExpressSystem
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_URL=kafka:29092
+
+  InternationalSys:
+    build:
+      context: ./InternationalSystem
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_URL=kafka:29092
+
+  Client:
+    build:
+      context: ./Client
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_URL=kafka:29092

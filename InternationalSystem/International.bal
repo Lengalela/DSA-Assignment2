@@ -3,9 +3,9 @@ import ballerina/lang.value;
 import ballerina/log;
 
 // Configurable variables
-configurable string groupId = "international-delivery-group";
-configurable string consumeTopic = "international-delivery";
-configurable string produceTopic = "delivery-confirmations";
+configurable string groupId = "international_Delivery_Group";
+configurable string consumeTopic = "International_Delivery";
+configurable string produceTopic = "Delivery_Confirmations";
 
 // The main function is marked as isolated for improved concurrency safety
 public isolated function main() returns error? {

@@ -2,9 +2,9 @@ import ballerina/lang.value;
 import ballerina/log;
 import ballerinax/kafka;
 
-configurable string groupId = "standard-delivery-group";
-configurable string consumeTopic = "standard-delivery";
-configurable string produceTopic = "delivery-confirmations";
+configurable string groupId = "Standard_Delivery_group";
+configurable string consumeTopic = "Standard_Del";
+configurable string produceTopic = "Delivery_Confirmations";
 
 public function main() returns error? {
     kafka:Consumer kafkaConsumer = check createKafkaConsumer();
@@ -42,7 +42,7 @@ function processStandardDelivery(string requestStr) returns error? {
 function sendConfirmation(json request) returns error? {
     kafka:Producer kafkaProducer = check createKafkaProducer();
     json confirmation = check createConfirmationJson(request);
-    check sendKafkaMessage(kafkaProducer, confirmation);
+    check sendMessage(kafkaProducer, confirmation);
     check kafkaProducer->'close();
 }
 
@@ -63,7 +63,7 @@ function createConfirmationJson(json request) returns json|error {
     };
 }
 
-function sendKafkaMessage(kafka:Producer producer, json message) returns error? {
+function sendMessage(kafka:Producer producer, json message) returns error? {
     byte[] serializedMsg = message.toJsonString().toBytes();
     check producer->send({
         topic: produceTopic,

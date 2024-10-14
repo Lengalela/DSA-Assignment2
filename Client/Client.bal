@@ -5,31 +5,28 @@ import ballerina/uuid;
 
 
 public function main() returns error? {
-    io:println("Welcome to the Logistics System");
+    io:println("Logistics Management System");
+    io:println("\nPlease select an option:");
+    io:println("1. Submit a new delivery request");
+    io:println("2. Track a shipment");
+    io:println("3. Exit");
     check runMainMenu();
 }
 
 function runMainMenu() returns error? {
     while (true) {
-        displayMainMenu();
-        int option = check getMenuOption();
-        check handleMenuOption(option);
+        int cli = check getMenuOption();
+        check handleMenuOption(cli);
     }
 }
 
-function displayMainMenu() {
-    io:println("\nPlease select an option:");
-    io:println("1. Submit a new delivery request");
-    io:println("2. Track a shipment");
-    io:println("3. Exit");
-}
 
 function getMenuOption() returns int|error {
     return int:fromString(io:readln("Enter your choice (1-3): "));
 }
 
-function handleMenuOption(int option) returns error? {
-    match option {
+function handleMenuOption(int cli) returns error? {
+    match cli {
         1 => {
             check submitDeliveryRequest();
         }
@@ -37,11 +34,11 @@ function handleMenuOption(int option) returns error? {
             check trackShipment();
         }
         3 => {
-            io:println("Thank you for using the Logistics System. Goodbye!");
+            io:println("Goodbye!");
             return error("Exit");
         }
         _ => {
-            io:println("Invalid option. Please try again.");
+            io:println("Invalid option. Try another");
         }
     }
 }
@@ -105,7 +102,7 @@ function displayTrackingConfirmation(string trackingNumber) {
     io:println("Please check back later for updates on your shipment.");
 }
 
-function sendToKafka(json payload, string topic = "delivery-requests") returns error? {
+function sendToKafka(json payload, string topic = "Delivery_Requests") returns error? {
     kafka:ProducerConfiguration producerConfigs = {
         clientId: "logistics-client",
         acks: "all",
