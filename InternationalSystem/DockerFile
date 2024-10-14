@@ -1,0 +1,7 @@
+FROM ballerina/ballerina:latest
+
+WORKDIR /app
+
+COPY International.bal .
+
+CMD ["bal", "run", "International.bal"]

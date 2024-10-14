@@ -1,0 +1,7 @@
+FROM ballerina/ballerina:latest
+
+WORKDIR /app
+
+COPY Express.bal .
+
+CMD ["bal", "run", "Express.bal"]
