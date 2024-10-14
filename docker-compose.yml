@@ -28,6 +28,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: lenga
       MONGO_INITDB_ROOT_PASSWORD: password
 
+  #Bal servicesss
   LogisticsSys:
     build:
       context: ./LogisticsSystem
@@ -35,42 +36,31 @@ services:
     depends_on:
       - kafka
       - mongodb
-    environment:
-      - MONGODB_URL=mongodb://mongodb:27017
-      - KAFKA_URL=kafka:29092
 
   StandardSys:
     build:
       context: ./StandardSystem
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     depends_on:
       - kafka
-    environment:
-      - KAFKA_URL=kafka:29092
 
   ExpressSys:
     build:
       context: ./ExpressSystem
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     depends_on:
       - kafka
-    environment:
-      - KAFKA_URL=kafka:29092
 
   InternationalSys:
     build:
       context: ./InternationalSystem
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     depends_on:
       - kafka
-    environment:
-      - KAFKA_URL=kafka:29092
 
   Client:
     build:
       context: ./Client
-      dockerfile: Dockerfile
+      dockerfile: DockerFile
     depends_on:
       - kafka
-    environment:
-      - KAFKA_URL=kafka:29092
